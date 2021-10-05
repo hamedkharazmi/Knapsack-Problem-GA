@@ -1,7 +1,5 @@
-
 $(".chromosome").html(chromosome);
 $(".best").append(best);
-
 
 var label = document.querySelector(".label");
 var c = document.getElementById("c");
@@ -21,22 +19,6 @@ ctx.font = "14px monospace";
 var grd = ctx.createLinearGradient(0, 0, 0, cy);
 grd.addColorStop(0, "hsla(167,7%,6%,1)");
 grd.addColorStop(1, "hsla(167,72%,60%,0)");
-
-
-// var valuesRy = [];
-// var propsRy = [];
-// for (var prop in average) {
-//   valuesRy.push(oData[prop]);
-//   propsRy.push(prop);
-// }
-
-// var valuesRy = average;
-// var propsRy = index;
-
-// console.log(valuesRy);
-// console.log(propsRy);
-// console.log(average);
-// console.log(index);
 
 var vData = 0.1;
 var hData = valuesRy.length;
@@ -59,28 +41,12 @@ var C = {
   y: offset + chartHeight
 }
 
-/*
-      A  ^
-	    |  |  
-	    + 25
-	    |
-	    |
-	    |
-	    + 25  
-      |__|_________________________________  C
-      B
-*/
-
-// CHART AXIS -------------------------
 ctx.beginPath();
 ctx.moveTo(A.x, A.y);
 ctx.lineTo(B.x, B.y);
 ctx.lineTo(C.x, C.y);
 ctx.stroke();
-
-// vertical ( A - B )
 var aStep = (chartHeight - 290) / (vData);
-
 var Max = Math.ceil(arrayMax(valuesRy) / 10) * 10;
 var Min = Math.floor(arrayMin(valuesRy) / 10) * 10;
 var aStepValue = (Max - Min) / (vData);
@@ -107,7 +73,6 @@ for (var i = 0; i <= vData; i++) {
   drawCoords(a[i], 3, 0);
 }
 
-//horizontal ( B - C )
 var b = [];
 ctx.textAlign = "center";
 ctx.textBaseline = "hanging";
@@ -137,9 +102,7 @@ function drawCoords(o, offX, offY) {
 
   ctx.fillText(o.val, o.x - 2 * offX, o.y + 2 * offY);
 }
-//----------------------------------------------------------
 
-// DATA
 var oDots = [];
 var oFlat = [];
 var i = 0;
@@ -159,10 +122,6 @@ for (var prop in valuesRy) {
   i++
 }
 
-
-
-///// Animation Chart ///////////////////////////
-//var speed = 3;
 function animateChart() {
   requestId = window.requestAnimationFrame(animateChart);
   frames += speed; //console.log(frames)
@@ -188,7 +147,6 @@ function animateChart() {
 }
 requestId = window.requestAnimationFrame(animateChart);
 
-/////// EVENTS //////////////////////
 c.addEventListener("mousemove", function(e) {
   label.innerHTML = "";
   label.style.display = "none";
@@ -215,9 +173,7 @@ function output(m, i) {
   }
 }
 
-// CURVATURE
 function controlPoints(p) {
-  // given the points array p calculate the control points
   var pc = [];
   for (var i = 1; i < p.length - 1; i++) {
     var dx = p[i - 1].x - p[i + 1].x; // difference x
@@ -230,7 +186,6 @@ function controlPoints(p) {
       y: y1
     };
 
-    // the second control point
     var x2 = p[i].x + dx * t;
     var y2 = p[i].y + dy * t;
     var o2 = {
@@ -238,7 +193,6 @@ function controlPoints(p) {
       y: y2
     };
 
-    // building the control points array
     pc[i] = [];
     pc[i].push(o1);
     pc[i].push(o2);
@@ -251,23 +205,17 @@ function drawCurve(p) {
   var pc = controlPoints(p); // the control points array
 
   ctx.beginPath();
-  //ctx.moveTo(p[0].x, B.y- 25);
   ctx.lineTo(p[0].x, p[0].y);
-  // the first & the last curve are quadratic Bezier
-  // because I'm using push(), pc[i][1] comes before pc[i][0]
   ctx.quadraticCurveTo(pc[1][1].x, pc[1][1].y, p[1].x, p[1].y);
 
   if (p.length > 2) {
-    // central curves are cubic Bezier
     for (var i = 1; i < p.length - 2; i++) {
       ctx.bezierCurveTo(pc[i][0].x, pc[i][0].y, pc[i + 1][1].x, pc[i + 1][1].y, p[i + 1].x, p[i + 1].y);
     }
-    // the first & the last curve are quadratic Bezier
     var n = p.length - 1;
     ctx.quadraticCurveTo(pc[n - 1][0].x, pc[n - 1][0].y, p[n].x, p[n].y);
   }
 
-  //ctx.lineTo(p[p.length-1].x, B.y- 25);
   ctx.stroke();
   ctx.save();
   ctx.fillStyle = grd;
@@ -291,12 +239,6 @@ function oMousePos(canvas, evt) {
   }
 }
 
-
-
-
-
-
-
 var colors = new Array(
     [62, 35, 255],
     [60, 255, 60],
@@ -309,7 +251,6 @@ var colors = new Array(
 var step = 0;
 var colorIndices = [0, 1, 2, 3];
 
-//transition speed
 var gradientSpeed = 0.002;
 
 function updateGradient() {
@@ -353,9 +294,6 @@ function updateGradient() {
     step %= 1;
     colorIndices[0] = colorIndices[1];
     colorIndices[2] = colorIndices[3];
-
-    //pick two new target color indices
-    //do not pick the same as the current one
     colorIndices[1] =
       (colorIndices[1] + Math.floor(1 + Math.random() * (colors.length - 1))) %
       colors.length;
@@ -366,5 +304,3 @@ function updateGradient() {
 }
 
 setInterval(updateGradient, 10);
-
-
