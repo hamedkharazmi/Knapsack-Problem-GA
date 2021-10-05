@@ -135,8 +135,6 @@ print(t2-t1)
 # print(average)
 
 
-
-
 output_buffer+="var chromosome = '"+str(best.chromosome)+"';\n"
 output_buffer+="var best = "+str(best.fitness)+";\n"
 output_buffer+="var valuesRy = ["
